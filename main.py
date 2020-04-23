@@ -22,9 +22,9 @@ class Main(Controller):
                             list_of_regex=datas,
                             content=test
                         )
-                        print coba
-                        break
                         if coba:
+                            # print test
+                            # break
                             media_error = {
                                 j: "Konten Kotor"
                             }
@@ -32,6 +32,7 @@ class Main(Controller):
                             break
             except Exception as e:
                 # print media_content
+                # print "gege"
                 raise e
         print list_error_content
     

@@ -1,6 +1,9 @@
 import pymysql
 import re
+import json
+import sys
 
+from io import StringIO
 from datetime import datetime
 from datetime import timedelta
 from ConfigParser import ConfigParser
@@ -38,17 +41,40 @@ class Controller:
         ]
         return now_h
     
-    def match_regex(self, **kwargs):
+    def match_regex(self, **kwargs): 
+        st = []
         for i in kwargs["list_of_regex"]:
-            print i
-            print re.escape(i)
-            break
             try:
-                pattern = re.match("{}".format(i), kwargs["content"])
-                if pattern:
-                        return True
-                else:
-                    continue
+                regex = "{}".format(i)
+                r = re.compile(regex)
             except Exception as e:
-                raise e
+                with open("error.json", "a+") as ef:
+                    err_me = {
+                        "regex": "{}".format(i), #escape string unsolved
+                        "error": "{}".format(e)
+                    }
+                    print err_me
+                    # b = json.dumps(err_me)
+                    ef.write("e"+",\n")
+                    ef.close()
+                print "Regex : {0} error {1}".format(i, e)
+                regex = "{}".format(re.escape(i))
+            # print regex
+            pattern= r.finditer(kwargs["content"], re.MULTILINE)
+            # pattern = re.finditer(regex, kwargs["content"], re.MULTILINE)
+            for matchNum, match in enumerate(pattern, start=1):
+                if match.end() | match.start():
+                    match_me = {
+                        "content": kwargs["content"],
+                        "regex": i.decode('unicode_escape'),
+                        "match_found": match.group()
+                    }
+                    data = json.dumps(match_me)
+                    with open("log_ambigu.json", "a+") as f:
+                        f.write(data+",\n")
+                        # print data
+                        f.close()
+                    return True
+                else:
+                    continue        
         return False
