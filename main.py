@@ -1,4 +1,5 @@
 import logging
+import json
 
 from controller import Controller
 
@@ -21,6 +22,7 @@ class Main(Controller):
                 for j in media_content:
                     for test in media_content[j]:
                         coba = self.match_regex(
+                            media=i,
                             list_of_regex=datas,
                             content=test
                         )
@@ -32,6 +34,9 @@ class Main(Controller):
                             break
             except Exception as e:
                 logging.error(e)
+        with open("media_kontent_kotor.json", "w") as f:
+            json.dump(list_error_content, f)
+            f.close()
     
     def get_media_update_today(self):
         con = self.db_con(
@@ -43,7 +48,7 @@ class Main(Controller):
         try:
             cursor = con.cursor()
             query = '''
-                SELECT news_media FROM data_news_index_new where news_pubday="{}" GROUP BY news_media
+                SELECT news_media FROM data_news_index_new where news_pubday="{}" GROUP BY news_media limit 5
             '''.format(self.day[0])
             cursor.execute(query)
             datas = cursor.fetchall()

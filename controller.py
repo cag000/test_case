@@ -49,7 +49,7 @@ class Controller:
                 regex = "{}".format(i)
                 r = re.compile(regex)
             except Exception as e:
-                with open("error.json", "a+") as ef:
+                with open("python_regex_error.json", "a+") as ef:
                     err_me = {
                         "regex": "{}".format(i), #escape string unsolved
                         "error": "{}".format(e)
@@ -63,9 +63,10 @@ class Controller:
             for matchNum, match in enumerate(pattern, start=1):
                 if match.end() | match.start():
                     match_me = {
+                        "Media": kwargs["media"],
                         "content": kwargs["content"],
                         "regex": i.decode('unicode_escape'),
-                        "match_found": match.group()
+                        "match_found": match.group(),
                     }
                     data = json.dumps(match_me)
                     with open("log_ambigu.json", "a+") as f:
