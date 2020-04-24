@@ -33,6 +33,8 @@ class Main(Controller):
                             }
                             list_error_content.append(media_error)
                             break
+                        else:
+                            break
             except Exception as e:
                 logging.error(e)
         with open("media_kontent_kotor_"+self.day[0]+".json", "w") as f:
