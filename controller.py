@@ -2,6 +2,7 @@ import pymysql
 import re
 import json
 import sys
+import logging
 
 from io import StringIO
 from datetime import datetime
@@ -24,7 +25,7 @@ class Controller:
                 cursorclass=pymysql.cursors.DictCursor
             )
         except pymysql.MySQLError as e:
-            print e
+            logging.error(e)
         finally:
             return con
     
@@ -53,15 +54,12 @@ class Controller:
                         "regex": "{}".format(i), #escape string unsolved
                         "error": "{}".format(e)
                     }
-                    print err_me
-                    # b = json.dumps(err_me)
-                    ef.write("e"+",\n")
+                    b = json.dumps(err_me)
+                    ef.write(b+",\n")
                     ef.close()
-                print "Regex : {0} error {1}".format(i, e)
+                # print "Regex : {0} error {1}".format(i, e)
                 regex = "{}".format(re.escape(i))
-            # print regex
             pattern= r.finditer(kwargs["content"], re.MULTILINE)
-            # pattern = re.finditer(regex, kwargs["content"], re.MULTILINE)
             for matchNum, match in enumerate(pattern, start=1):
                 if match.end() | match.start():
                     match_me = {
@@ -72,7 +70,6 @@ class Controller:
                     data = json.dumps(match_me)
                     with open("log_ambigu.json", "a+") as f:
                         f.write(data+",\n")
-                        # print data
                         f.close()
                     return True
                 else:
