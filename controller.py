@@ -49,7 +49,7 @@ class Controller:
                 regex = "{}".format(i)
                 r = re.compile(regex)
             except Exception as e:
-                with open("python_regex_error.json", "a+") as ef:
+                with open("python_regex_error_"+kwargs["day"]+".json", "a+") as ef:
                     err_me = {
                         "regex": "{}".format(i), #escape string unsolved
                         "error": "{}".format(e)
@@ -69,7 +69,7 @@ class Controller:
                         "match_found": match.group(),
                     }
                     data = json.dumps(match_me)
-                    with open("log_ambigu.json", "a+") as f:
+                    with open("log_ambigu_"+kwargs["day"]+".json", "a+") as f:
                         f.write(data+",\n")
                         f.close()
                     return True

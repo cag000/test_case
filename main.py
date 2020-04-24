@@ -24,7 +24,8 @@ class Main(Controller):
                         coba = self.match_regex(
                             media=i,
                             list_of_regex=datas,
-                            content=test
+                            content=test,
+                            day=self.day[0]
                         )
                         if coba:
                             media_error = {
@@ -34,7 +35,7 @@ class Main(Controller):
                             break
             except Exception as e:
                 logging.error(e)
-        with open("media_kontent_kotor.json", "w") as f:
+        with open("media_kontent_kotor_"+self.day[0]+".json", "w") as f:
             json.dump(list_error_content, f)
             f.close()
     
